@@ -1,4 +1,4 @@
-# test
+# SMRFUS
 
 [Last tested May 26, 2023]
 
@@ -6,7 +6,7 @@ Adopted from post written by [Xavier Vasques](https://towardsdatascience.com/bui
 
 1. Clone
 ```
-$ git clone https://github.com/lisatwyw/test.git
+$ git clone https://github.com/lisatwyw/smrfus.git
 $ cd test
 ```
 
@@ -15,9 +15,9 @@ $ cd test
 docker build --tag docker-test -f Dockerfile .
 ```
  
-3. Test on new data by calling ```inference.py```
+3. Test on new data by calling ```infer.py```
 ```
-docker run docker-test python3 src/infer.py
+docker run docker-test python3 infer.py
 ```
 
 
