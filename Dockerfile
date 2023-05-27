@@ -1,3 +1,5 @@
+FROM scratch  # this is required 
+
 RUN mkdir model
 RUN mkdir source
 
