@@ -1,6 +1,5 @@
-# create folder 
-RUN cd smrfus
 RUN mkdir model
+RUN mkdir source
 
 # declare environment variables, if needed
 # ENV MODEL_FILE_LDA=model/ckpt
