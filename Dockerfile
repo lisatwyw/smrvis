@@ -5,10 +5,10 @@ RUN mkdir model
 ENV MODEL_DIR=/home/jovyan/my-model
 ENV MODEL_FILE_LDA=model/ckpt
 
-RUN pip install joblib vedo
+RUN pip install joblib vedo tensorflow
 
 # vedo: mesh
 
-COPY inference.py ./inference.py
+COPY infer.py ./infer.py
 
-RUN python3 inference.py test_volume.mhd
+RUN python3 infer.py test_volume.mhd
