@@ -2,6 +2,7 @@ FROM python:3.8-slim
 
 RUN mkdir -p models
 RUN mkdir -p source
+RUN mkdir -p samples
 
 RUN apt update && \
     apt install --no-install-recommends -y build-essential gcc && \
