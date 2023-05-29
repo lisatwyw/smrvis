@@ -14,7 +14,13 @@ cd smrvis
 docker build --tag docker-test -f Dockerfile .
 ```
  
-3. Test on new data by calling ```infer.py```
+3. Test
+
+```
+docker run docker-test python3 source/test.py
+```
+
+4. [Pending] Apply on data by calling ```infer.py```
 ```
 docker run docker-test python3 source/infer.py
 ```
