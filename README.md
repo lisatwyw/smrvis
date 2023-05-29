@@ -1,4 +1,4 @@
-# Ultrasound to pointcloud of pipes
+# Ultrasound to pointcloud (of pipes)
 
 **[Site under construction]**
 
