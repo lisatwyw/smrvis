@@ -19,6 +19,7 @@ docker build --tag docker-test -f Dockerfile .
 docker run docker-test python3 source/infer.py
 ```
 
+Above was last tested in [Docker classroom](https://training.play-with-docker.com/beginner-linux/)
 
 # References  
 
