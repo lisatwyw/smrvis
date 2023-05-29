@@ -5,8 +5,8 @@
 
 1. Clone
 ```
-git clone https://github.com/lisatwyw/smrfus.git
-cd smrfus
+git clone https://github.com/lisatwyw/smrvis.git
+cd smrvis
 ```
 
 2. Build (includes pip installations)
