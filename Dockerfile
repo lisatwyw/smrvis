@@ -7,6 +7,7 @@ RUN mkdir -p samples
 RUN apt update && \
     apt install --no-install-recommends -y build-essential gcc && \
     apt clean && rm -rf /var/lib/apt/lists/*
+COPY ./req_slim.txt /req_slim.txt
 COPY ./req.txt /req.txt
 COPY ./source /source
 
