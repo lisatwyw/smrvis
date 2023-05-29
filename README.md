@@ -16,7 +16,7 @@ docker build --tag docker-test -f Dockerfile .
  
 3. Test on new data by calling ```infer.py```
 ```
-docker run docker-test python3 infer.py
+docker run docker-test python3 source/infer.py
 ```
 
 
