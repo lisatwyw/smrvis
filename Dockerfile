@@ -9,7 +9,7 @@ RUN apt update && \
 COPY ./req.txt /req.txt
 COPY ./source /source
 
-RUN pip3 install --no-cache-dir -r /req.txt
+RUN pip3 install --no-cache-dir -r /req_slim.txt
 CMD ['python3', '/source/test.py']
 EXPOSE 8080
 
