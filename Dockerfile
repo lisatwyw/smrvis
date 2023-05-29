@@ -1,7 +1,7 @@
 FROM scratch
 
-RUN mkdir models
-RUN mkdir source
+RUN mkdir -p models
+RUN mkdir -p source
 
 RUN pip install tensorflow pyvista vedo
 
