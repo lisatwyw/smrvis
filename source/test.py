@@ -3,11 +3,7 @@ import sys; print("Python", sys.version)
 import tensorflow as tf; print("Tensorflow", tf.__version__)
 import numpy as np
 
-# https://www.activestate.com/resources/quick-reads/how-to-list-installed-python-packages/
-import pkg_resources
-installed_packages = pkg_resources.working_set
-installed_packages_list = sorted(["%s==%s" % (i.key, i.version) for i in installed_packages])
-print(installed_packages_list)
+
 
 # ================================ helper ================================  
 def predict_mask_in_batches( inp, model, BS ):        
@@ -77,16 +73,17 @@ print( 'Above equal to [ 0.1260792 , -0.0652371 , -0.0849674 ,  0.11226883,  0.1
 demo=0    
 ctn=1
 try:
-    us_filename=sys.argv[ctn]; ++ctn
-    output_file=sys.argv[ctn]; ++ctn
-    thres=float( sys.argv[ctn] ); 
+    us_filename=sys.argv[ctn];   ++ctn
+    output_file=sys.argv[ctn];   ++ctn
+    thres=float( sys.argv[ctn]); ++ctn 
+    iBS=int( sys.argv[ctn] ); 
 except:
     demo=1
     us_filename = '../models/rand2.npz'
     print('No filename provided; test data will be used...')
     output_file='../models/detected_pointcloud'
     thres=0.25
-    print( '\n\n\nRun in demo mode. \nExample usage: test.py input.mhd output_prefix 0.25...\n\n' )
+    print( '\n\n\nRun in demo mode! \n\nExample usage: test.py input.mhd output_prefix 0.25 8\nPredict in batches of 8 slices and apply global threshold of 0.25 on prb mask.' )
        
     
     
@@ -122,7 +119,7 @@ np.savez_compressed( output_file, x=1, y=1, z=1 )
 # ================================ Cast model predictions ================================    
 
 # predict in batches; yp is the result of taking average over 3-slices 
-yp,_,_ = predict_mask_in_batches( inp, model, 8 )
+yp,_,_ = predict_mask_in_batches( inp, model, iBS )
 
 
 # ================================ Extract points & output ================================    
@@ -136,3 +133,8 @@ np.savez_compressed( output_file, x=px, y=py, z=pz )
 if demo:
     print( '241,061 points saved to output_file test??')
    
+    # https://www.activestate.com/resources/quick-reads/how-to-list-installed-python-packages/
+    import pkg_resources
+    installed_packages = pkg_resources.working_set
+    installed_packages_list = sorted(["%s==%s" % (i.key, i.version) for i in installed_packages])
+    print(installed_packages_list)
