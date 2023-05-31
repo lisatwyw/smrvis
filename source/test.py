@@ -74,15 +74,16 @@ demo=0
 ctn=1
 try:
     us_filename=sys.argv[ctn];   ++ctn
-    output_file=sys.argv[ctn];   ++ctn
+    output_file=sys.argv[ctn];   ++ctn    
+    iBS=int( sys.argv[ctn] );    ++ctn
     thres=float( sys.argv[ctn]); ++ctn 
-    iBS=int( sys.argv[ctn] ); 
 except:
     demo=1
     us_filename = '../models/rand2.npz'
     print('No filename provided; test data will be used...')
     output_file='../models/detected_pointcloud'
-    thres=0.25
+    iBS=8
+    thres=0.25    
     print( '\n\n\nRun in demo mode! \n\nExample usage: test.py input.mhd output_prefix 0.25 8\nPredict in batches of 8 slices and apply global threshold of 0.25 on prb mask.' )
        
     
