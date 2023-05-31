@@ -14,5 +14,15 @@ for s in ff:
     except:
         exec( '%s=\'%s\'' %( s[:2], s[2:] ) )
         print( '%s=\'%s\'' %( s[:2], s[2:] ) )
-        
-NX=NY=266; NZ=3; exec( open('c0args.py').read() ); exec( open('c1tfsetup.py' ).read())
+    
+if IR==3:      
+    NX=NY=266 
+elif IR==2:    
+    NX=NY=384 
+NZ=3 
+
+try:
+    exec( open('c0args.py').read() ) 
+    exec( open('c1tfsetup.py' ).read())
+except:
+    print('Scripts for part 2 needed')
