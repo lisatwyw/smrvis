@@ -12,8 +12,13 @@ COPY ./req.txt /req.txt
 COPY ./source /source
 COPY ./models /models
 
+RUN cd models && tar -xf IT3_IV2_EN0_IR3_ARunet_NF8.tar.gz
+
 RUN pip3 install --no-cache-dir -r /req_slim.txt
 CMD ['python3', '/source/test.py']
+
+
+
 EXPOSE 8080
 
 # python3 infer.py test_volume.mhd
