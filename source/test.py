@@ -15,11 +15,14 @@ print(installed_packages_list)
 print('Testing')
 
 
-import SimpleITK as sitk
-from tqdm import tqdm
+try:
+   model = tf.keras.models.load_model( '../models/IT3_IV2_EN0_IR3_ARunetpp_NF.h5')   
+   print( model.summary() )
+except Exception as e:
+   print(e)
 
-model = tf.keras.models.load_model( '../models/IT3_IV2_EN0_IR3_ARunetpp_NF.h5')
-print( model.summary() )
+import SimpleITK as sitk
+# from tqdm import tqdm
 
 ctn =1
 try:
