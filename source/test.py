@@ -68,9 +68,7 @@ except Exception as e:
    
 print( model.weights[0][:,1,1,0] ,'\n\n')
 print( 'model.weights[0][:,1,1,0]\n<tf.Tensor: shape=(3,), dtype=float32, numpy=array([0.04552065, 0.26180163, 0.08348185], dtype=float32)>')
-                                                                                                 
-                                                                                                   
-import SimpleITK as sitk
+                                                                                                
 ctn=1
 try:
    us_filename=sys.argv[ctn]; ++ctn
@@ -87,6 +85,7 @@ except:
    thres=0.25
    
 if 'mhd' in us_filename:
+   import SimpleITK as sitk
    hd = sitk.ReadImage( us_filename ) 
    inp = sitk.GetArrayFromImage( hd )              
    voxspacing = hd.GetSpacing()
