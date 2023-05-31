@@ -16,7 +16,7 @@ print('Testing')
 
 
 try:
-   model = tf.keras.models.load_model( '../models/IT3_IV2_EN0_IR3_ARunetpp_NF.h5', custom_objects={'BinaryFocalCrossentropy': tf.keras.losses.BinaryFocalCrossentropy() )   
+   model = tf.keras.models.load_model( '../models/IT3_IV2_EN0_IR3_ARunetpp_NF.h5', custom_objects={'BinaryFocalCrossentropy': tf.keras.losses.BinaryFocalCrossentropy()} )   
    print( model.summary() )
 except Exception as e:
    print(e)                                                                                                   
