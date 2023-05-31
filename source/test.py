@@ -20,22 +20,23 @@ def predict_mask_in_batches( inp, model, BS ):
     
     sl={}
     yp_mn = np.zeros( inp.shape )
-    yp_mx = np.zeros( inp.shape )
-    yp_ig = np.zeros( inp.shape )
+    #yp_mx = np.zeros( inp.shape )
+    #yp_ig = np.zeros( inp.shape )
       
     for b in range(0,nsections):
         print(end='%d..'%b,flush=True)
-        sl[b]=slnums= np.arange( b*M, M*(b+1) )                
+        
         ii = inp[slnums,]
         ii = np.stack( (inp[slnums-1,],inp[slnums,],inp[slnums+1,]), 3)  # ignore the loop around 
         
         yp = model.predict( ii, verbose=0 )     
-        yp_mn[slnums, ] = np.mean( yp, -1 ) 
-        yp_mx[slnums, ] = np.max( yp, axis=-1 )     
-        yp_ig[slnums, ] = yp[:,:,:,1]  
+        yp_mn[slnums, ] = np.mean( yp, -1 )                 
+        #sl[b]=slnums= np.arange( b*M, M*(b+1) )                
+        #yp_mx[slnums, ] = np.max( yp, axis=-1 )     
+        #yp_ig[slnums, ] = yp[:,:,:,1]  
     
     print( 'Model predictions'' range:', np.min(yp_mn), np.max( yp_mn ))    
-    return yp_mn[:-1,], yp_mx[:-1,], yp_ig[:-1,],sl # take mid slice
+    return yp_mn[:-1,]#, yp_mx[:-1,], yp_ig[:-1,],sl # take mid slice
 
 def jaccard(invert=True):
     def loss(y_true, y_pred):                          
@@ -120,7 +121,7 @@ np.savez_compressed( output_file, x=1, y=1, z=1 )
 # ================================ Cast model predictions ================================    
 
 # predict in batches; yp is the result of taking average over 3-slices 
-yp,_,_,_ = predict_mask_in_batches( inp, model, iBS )
+yp = predict_mask_in_batches( inp, model, iBS )
 
 
 # ================================ Extract points & output ================================    
