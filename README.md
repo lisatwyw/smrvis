@@ -20,13 +20,6 @@ docker build --tag docker-test -f Dockerfile .
 docker run docker-test python3 source/test.py models/rand2.npz source/test .25
 ```
 
-***
-
-Example outputs
-
-![image width="200"](https://github.com/lisatwyw/test/assets/38703113/ba3e3b5e-f6e2-48d8-b2aa-76a5481a163c)
-
-![image width="200"](https://github.com/lisatwyw/test/assets/38703113/d8a59e61-32c7-4ee7-aa99-ff2b38afb5c2)
 
 
 ***
@@ -39,12 +32,6 @@ The following packages will be installed using req_slim.txt
 
 ***
 
-
- 
-
-
-
-
 # References  
 
 - ["A quick and easy build of a Docker container with a simple machine learning model" by Xavier Vasque](https://towardsdatascience.com/build-and-run-a-docker-container-for-your-machine-learning-model-60209c2d7a7f)
@@ -52,5 +39,12 @@ The following packages will be installed using req_slim.txt
 - [Buiild and run a docker container, by Xavier Vasques](https://towardsdatascience.com/build-and-run-a-docker-container-for-your-machine-learning-model-60209c2d7a7f)
 
 
+***
+
+Example outputs
+
+![image width="200"](https://github.com/lisatwyw/test/assets/38703113/ba3e3b5e-f6e2-48d8-b2aa-76a5481a163c)
+
+![image width="200"](https://github.com/lisatwyw/test/assets/38703113/d8a59e61-32c7-4ee7-aa99-ff2b38afb5c2)
 
 
