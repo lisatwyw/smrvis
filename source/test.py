@@ -6,11 +6,10 @@ import numpy as np
 # https://www.activestate.com/resources/quick-reads/how-to-list-installed-python-packages/
 import pkg_resources
 installed_packages = pkg_resources.working_set
-installed_packages_list = sorted(["%s==%s" % (i.key, i.version)
-   for i in installed_packages])
-
+installed_packages_list = sorted(["%s==%s" % (i.key, i.version) for i in installed_packages])
 print(installed_packages_list)
-          
+
+
 def predict_mask_in_batches( inp, model, BS ):        
     assert inp.shape[1] ==model.input.shape[1]    
     
@@ -67,47 +66,58 @@ except Exception as e:
    print(e)          
    
 print( model.weights[0][:,1,1,0] ,'\n\n')
-print( 'model.weights[0][:,1,1,0]\n<tf.Tensor: shape=(3,), dtype=float32, numpy=array([0.04552065, 0.26180163, 0.08348185], dtype=float32)>')
-                                                                                                
+print( '...equal to [0.04552065, 0.26180163, 0.08348185]?')
+
+print( model.weights[0][-1,-1,1] ,'\n\n')
+print( '...equal to [ 0.1260792 , -0.0652371 , -0.0849674 ,  0.11226883,  0.10652731,',\
+        '0.12007868,  0.1658944 , -0.04231708] ?')
+                                                                                               
 ctn=1
 try:
    us_filename=sys.argv[ctn]; ++ctn
-except:
-   us_filename = 'rand2.npz'
-   print('No filename provided; test data will be used...')
-try:
-   output_file=sys.argv[ctn];++ctn
-except:
-   output_file='test_output'
-try:
+   output_file=sys.argv[ctn]; ++ctn
    thres=float( sys.argv[ctn] ); 
 except:
+   us_filename = '../models/rand2.npz'
+   print('No filename provided; test data will be used...')
+   output_file='../models/detected_pointcloud'
    thres=0.25
+
+   
+print( 'Reading %s\nWill write to %s with global thres=%.4f' %( us_filename, output_file, thres ))    
+
+if model.input.shape[2] ==256:
+   IR=3
+if model.input.shape[2] ==384:
+   IR=2  
    
 if 'mhd' in us_filename:
    import SimpleITK as sitk
    hd = sitk.ReadImage( us_filename ) 
    inp = sitk.GetArrayFromImage( hd )              
    voxspacing = hd.GetSpacing()
-
+   
+   # assume all volumes are saved in RAI format, which will be read as 1280 x 768 x 768
+   
+   if inp.shape[1] == 768:      
+      assert inp.shape[2] == 768
+      inp=inp[:,::IR,::IR]
+   
 elif 'npz' in us_filename:   
    dat = np.load( us_filename )
    inp=dat['vol']
-   voxspacing = [0.49479, 0.49479, 0.3125]
+   voxspacing = [0.49479, 0.49479, 0.3125]  
    
-assert inp.shape[1] == 768
-assert inp.shape[2] == 768
-
+   
 # expected intensity range
 inp = inp/ (1e-7+ np.max(inp))
 
 # predict in batches
 yp,_,_ = predict_mask_in_batches( inp, model, 16 )
 
-if model.input.shape[2] ==256:
-   IR=3
-if model.input.shape[2] ==384:
-   IR=2
+
+   
+
    
 pz,py,px=np.where( yp > thres )                
 px,py,pz=px*voxspacing[0]*IR,py*voxspacing[1]*IR,pz*voxspacing[2]  # critical!  
