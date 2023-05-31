@@ -28,7 +28,7 @@ def predict_mask_in_batches( inp, model, BS ):
     yp_ig = np.zeros( inp.shape )
       
     for b in range(0,nsections):
-        print(end='.',flush=True)
+        print(end='%d..'%b,flush=True)
         sl[b]=slnums= np.arange( b*M, M*(b+1) )                
         ii = inp[slnums,]
         ii = np.stack( (inp[slnums-1,],inp[slnums,],inp[slnums+1,]), 3)  # ignore the loop around 
@@ -121,12 +121,12 @@ np.savez_compressed( output_file, x=1, y=1, z=1 )
 
 # ================================ Cast model predictions ================================    
 
-# predict in batches; yp_st[0] is the result of taking average over 3-slices 
-yp_st,_,_ = predict_mask_in_batches( inp, model, 16 )
+# predict in batches; yp is the result of taking average over 3-slices 
+yp,_,_ = predict_mask_in_batches( inp, model, 8 )
 
 
 # ================================ Extract points & output ================================    
-pz,py,px=np.where( yp_st[0] > thres )                
+pz,py,px=np.where( yp_st > thres )                
 px,py,pz=px*voxspacing[0]*IR,py*voxspacing[1]*IR,pz*voxspacing[2]  # critical!  
 
 print( len(px), 'points will be saved to output_file', output_file )
