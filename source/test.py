@@ -14,7 +14,7 @@ def predict_mask_in_batches( inp, model, BS ):
     n_to_pad = T-nsections*BS    
     M = np.floor( T/nsections ).astype(int)
 
-    print( 'Input intensity range:', np.min( inp ), np.max( inp ) )
+    print( 'Input intensity range:', np.min( inp ), np.max( inp ), inp.shape )
 
     inp = np.pad(inp, ((0,1),(0,0),(0,0)), 'edge' )       
     
@@ -24,14 +24,17 @@ def predict_mask_in_batches( inp, model, BS ):
     #yp_ig = np.zeros( inp.shape )
       
     for b in range(0,nsections):
-        print(end='%d..'%b,flush=True)
+        
+        slnums= sl[b] = np.arange( b*M, M*(b+1) )                
+        print( slnums[0], slnums[-1], end=' |')
+        #print(end='%d..'%b,flush=True)
         
         ii = inp[slnums,]
         ii = np.stack( (inp[slnums-1,],inp[slnums,],inp[slnums+1,]), 3)  # ignore the loop around 
         
         yp = model.predict( ii, verbose=0 )     
         yp_mn[slnums, ] = np.mean( yp, -1 )                 
-        #sl[b]=slnums= np.arange( b*M, M*(b+1) )                
+        
         #yp_mx[slnums, ] = np.max( yp, axis=-1 )     
         #yp_ig[slnums, ] = yp[:,:,:,1]  
     
