@@ -9,7 +9,7 @@ installed_packages = pkg_resources.working_set
 installed_packages_list = sorted(["%s==%s" % (i.key, i.version) for i in installed_packages])
 print(installed_packages_list)
 
-
+# ================================ helper ================================  
 def predict_mask_in_batches( inp, model, BS ):        
     assert inp.shape[1] ==model.input.shape[1]    
     
@@ -58,75 +58,81 @@ def jaccard(invert=True):
     loss.__name__ = 'jaccard'
     return loss
 
+# ================================ load model and weights ================================
 try:
-   model = tf.keras.models.load_model('../models/IT3_IV2_EN0_IR3_ARunetpp_NF.h5', \
+    model = tf.keras.models.load_model('../models/IT3_IV2_EN0_IR3_ARunetpp_NF.h5', \
                                       custom_objects={'BinaryFocalCrossentropy': tf.keras.losses.BinaryFocalCrossentropy(), \
                                                      'jaccard': jaccard(False)} )      
 except Exception as e:
-   print(e)          
-   
-print( model.weights[0][:,1,1,0] ,'\n\n')
-print( '...equal to [0.04552065, 0.26180163, 0.08348185]?')
+    print(e)             
 
-print( model.weights[0][-1,-1,1] ,'\n\n')
-print( '...equal to [ 0.1260792 , -0.0652371 , -0.0849674 ,  0.11226883,  0.10652731,',\
-        '0.12007868,  0.1658944 , -0.04231708] ?')
-                                                                                               
+print( model.weights[0][:,1,1,0] )
+print( 'Above equal to [0.04552065, 0.26180163, 0.08348185]\n?\n')
+print( model.weights[0][-1,-1,1] )
+print( 'Above equal to [ 0.1260792 , -0.0652371 , -0.0849674 ,  0.11226883,  0.10652731,',\
+        '0.12007868,  0.1658944 , -0.04231708]\n\n?')
+    
+
+# ================================ Read in user arguments ================================    
+demo=0    
 ctn=1
 try:
-   us_filename=sys.argv[ctn]; ++ctn
-   output_file=sys.argv[ctn]; ++ctn
-   thres=float( sys.argv[ctn] ); 
+    us_filename=sys.argv[ctn]; ++ctn
+    output_file=sys.argv[ctn]; ++ctn
+    thres=float( sys.argv[ctn] ); 
 except:
-   us_filename = '../models/rand2.npz'
-   print('No filename provided; test data will be used...')
-   output_file='../models/detected_pointcloud'
-   thres=0.25
-   print( 'Run in demo mode. \nExample usage: test.py input.mhd output_prefix 0.25' )
-   
-    
+    demo=1
+    us_filename = '../models/rand2.npz'
+    print('No filename provided; test data will be used...')
+    output_file='../models/detected_pointcloud'
+    thres=0.25
+    print( '\n\n\nRun in demo mode. \nExample usage: test.py input.mhd output_prefix 0.25...\n\n' )
+       
     
     
 print( 'Reading %s\nWill write to %s with global thres=%.4f' %( us_filename, output_file, thres ))    
 
 if model.input.shape[2] ==256:
-   IR=3
+    IR=3
 if model.input.shape[2] ==384:
-   IR=2  
-   
+    IR=2  
 if 'mhd' in us_filename:
-   import SimpleITK as sitk
-   hd = sitk.ReadImage( us_filename ) 
-   inp = sitk.GetArrayFromImage( hd )              
-   voxspacing = hd.GetSpacing()
+    import SimpleITK as sitk
+    hd = sitk.ReadImage( us_filename ) 
+    inp = sitk.GetArrayFromImage( hd )              
+    voxspacing = hd.GetSpacing()
    
-   # assume all volumes are saved in RAI format, which will be read as 1280 x 768 x 768
-   
-   if inp.shape[1] == 768:      
-      assert inp.shape[2] == 768
-      inp=inp[:,::IR,::IR]
-   
+    # assume all volumes are saved in RAI format, which will be read as 1280 x 768 x 768   
+    if inp.shape[1] == 768:      
+        assert inp.shape[2] == 768
+        inp=inp[:,::IR,::IR]   
+        
 elif 'npz' in us_filename:   
-   dat = np.load( us_filename )
-   inp=dat['vol']
-   voxspacing = [0.49479, 0.49479, 0.3125]  
-   
-   
+    dat = np.load( us_filename )
+    inp=dat['vol']
+    voxspacing = [0.49479, 0.49479, 0.3125]  
+      
 # expected intensity range
 inp = inp/ (1e-7+ np.max(inp))
 
-# predict in batches
-yp,_,_ = predict_mask_in_batches( inp, model, 16 )
+# test output stream
+np.savez_compressed( output_file, x=1, y=1, z=1 )
 
 
-   
+# ================================ Cast model predictions ================================    
 
-   
-pz,py,px=np.where( yp > thres )                
+# predict in batches; yp_st[0] is the result of taking average over 3-slices 
+yp_st,_,_ = predict_mask_in_batches( inp, model, 16 )
+
+
+# ================================ Extract points & output ================================    
+pz,py,px=np.where( yp_st[0] > thres )                
 px,py,pz=px*voxspacing[0]*IR,py*voxspacing[1]*IR,pz*voxspacing[2]  # critical!  
 
 print( len(px), 'points will be saved to output_file', output_file )
 
 np.savez_compressed( output_file, x=px, y=py, z=pz )
-      
+
+if demo:
+    print( '241,061 points saved to output_file test??')
    
