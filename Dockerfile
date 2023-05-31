@@ -12,13 +12,12 @@ COPY ./req.txt /req.txt
 COPY ./source /source
 COPY ./models /models
 
-RUN cd models && tar -xf IT3_IV2_EN0_IR3_ARunet_NF8.tar.gz
+# https://stackoverflow.com/questions/52069375/extracting-gz-in-dockerfile
+ADD models/IT3_IV2_EN0_IR3_ARunet_NF8.tar.gz /models
+ADD models/IT3_IV2_EN0_IR3_ARunetpp_NF8.h5 /models
 
 RUN pip3 install --no-cache-dir -r /req_slim.txt
 CMD ['python3', '/source/test.py']
 
-
-
 EXPOSE 8080
 
-# python3 infer.py test_volume.mhd
