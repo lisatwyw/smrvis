@@ -82,8 +82,11 @@ except:
    print('No filename provided; test data will be used...')
    output_file='../models/detected_pointcloud'
    thres=0.25
-
+   print( 'Run in demo mode. \nExample usage: test.py input.mhd output_prefix 0.25' )
    
+    
+    
+    
 print( 'Reading %s\nWill write to %s with global thres=%.4f' %( us_filename, output_file, thres ))    
 
 if model.input.shape[2] ==256:
