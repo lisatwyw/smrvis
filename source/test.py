@@ -128,7 +128,7 @@ yp = predict_mask_in_batches( inp, model, iBS )
 
 
 # ================================ Extract points & output ================================    
-pz,py,px=np.where( yp_st > thres )                
+pz,py,px=np.where( yp > thres )                
 px,py,pz=px*voxspacing[0]*IR,py*voxspacing[1]*IR,pz*voxspacing[2]  # critical!  
 
 print( len(px), 'points will be saved to output_file', output_file )
