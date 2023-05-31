@@ -17,13 +17,9 @@ docker build --tag docker-test -f Dockerfile .
 3. Test
 
 ```
-docker run docker-test python3 source/test.py
+docker run docker-test python3 source/test.py models/rand2.npz source/test .25
 ```
 
-4. [Pending] Apply on data by calling ```infer.py```
-```
-docker run docker-test python3 source/infer.py
-```
 
 ***
 
