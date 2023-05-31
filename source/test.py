@@ -6,7 +6,7 @@ import numpy as np
 
 
 # ================================ helper ================================  
-def predict_mask_in_batches( inp, model, BS ):        
+def predict_mask_in_batches( inp, model, BS ):
     assert inp.shape[1] ==model.input.shape[1]    
     
     T = inp.shape[0]            
@@ -73,10 +73,10 @@ print( 'Above equal to [ 0.1260792 , -0.0652371 , -0.0849674 ,  0.11226883,  0.1
 demo=0    
 ctn=1
 try:
-    us_filename=sys.argv[ctn];   ++ctn
-    output_file=sys.argv[ctn];   ++ctn    
-    iBS=int( sys.argv[ctn] );    ++ctn
-    thres=float( sys.argv[ctn]); ++ctn 
+    us_filename=sys.argv[ctn];   ctn+=1
+    output_file=sys.argv[ctn];   ctn+=1   
+    iBS=int( sys.argv[ctn] );    ctn+=1
+    thres=float( sys.argv[ctn]); ctn+=1
 except:
     demo=1
     us_filename = '../models/rand2.npz'
