@@ -34,8 +34,8 @@ def predict_mask_in_batches( inp, model, BS ):
         yp_mx[slnums, ] = np.max( yp, axis=-1 )     
         yp_ig[slnums, ] = yp[:,:,:,1]  
     
-    print( 'Model predictions'' range:', yp_mn.min(), yp_mn.max() )    
-    return yp_mn[:-1,], yp_mx[:-1,], yp_ig[:-1,] # take mid slice
+    print( 'Model predictions'' range:', np.min(yp_mn), np.max( yp_mn ))    
+    return yp_mn[:-1,], yp_mx[:-1,], yp_ig[:-1,],sl # take mid slice
 
 def jaccard(invert=True):
     def loss(y_true, y_pred):                          
@@ -120,7 +120,7 @@ np.savez_compressed( output_file, x=1, y=1, z=1 )
 # ================================ Cast model predictions ================================    
 
 # predict in batches; yp is the result of taking average over 3-slices 
-yp,_,_ = predict_mask_in_batches( inp, model, iBS )
+yp,_,_,_ = predict_mask_in_batches( inp, model, iBS )
 
 
 # ================================ Extract points & output ================================    
