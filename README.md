@@ -1,7 +1,6 @@
 # Ultrasound to point cloud (of pipes)
 
-**[Site under construction]**
-
+**[Site under construction; inquires welcomed]**
 
 1. Clone
 ```
@@ -17,8 +16,18 @@ docker build --tag docker-test -f Dockerfile .
 3. Test
 
 ```
-docker run docker-test python3 source/test.py models/rand2.npz source/test .25
+docker run docker-test python3 source/test.py models/rand2.npz source/test .25 BS
 ```
+
+## Usage notes
+
+Arguments to test.py:
+1) Filename of the volume to be processed; a sample of the meta file is provided [here](samples/scan_001.mhd) 
+2) Prefix of output file that will save the coordinates of the extracted point cloud
+3) Threshold on the probablistic output
+4) Batch size of model predictions (use low number if limited RAM is available)
+
+
 
 
 
