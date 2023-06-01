@@ -16,16 +16,22 @@ docker build --tag docker-test -f Dockerfile .
 3. Test
 
 ```
-docker run docker-test python3 source/test.py models/rand2.npz source/test .25 BS
+docker run docker-test python3 source/test.py models/rand2.npz output_test_file .25 16
 ```
 
 ## Usage notes
 
 Arguments to test.py:
-1) Filename of the volume to be processed; a sample of the meta file is provided [here](samples/scan_001.mhd) 
-2) Prefix of output file that will save the coordinates of the extracted point cloud
-3) Threshold on the probablistic output
-4) Batch size of model predictions (use low number if limited RAM is available)
+1) ```models2/rand2.npz``` 
+   - Filename of the volume to be processed 
+   - Sample of the meta file is provided [here](samples/scan_001.mhd) 
+   - models/rand2.npz provided for test runs only   
+2) ```output_test_file``` 
+   - Prefix of output file that will save the coordinates of the extracted point cloud
+3) ```0.25```: 
+   - threshold on the probablistic output (value may change depending on model used)
+4) ```16```:
+   - Model will cast predictions on 16 slices at a time (use higher/lower number if more/limited RAM is available)
 
 
 
