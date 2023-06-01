@@ -23,8 +23,8 @@ docker run docker-test python3 source/test.py models/rand2.npz output_test_file 
 
 Arguments to test.py:
 1) ```models2/rand2.npz``` 
-   - Filename of the volume to be processed 
-   - Sample of the meta file is provided [here](samples/scan_001.mhd) 
+   - Filename of the volume to be processed; best if read with a meta header file (MHD) 
+   - Sample of MHD file is provided [here](samples/scan_001.mhd) 
    - ```models/rand2.npz``` provided for test runs only   
 2) ```output_test_file``` 
    - Prefix of output file that will save the coordinates of the extracted point cloud
