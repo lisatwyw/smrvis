@@ -35,8 +35,7 @@ Arguments to test.py:
 
 The script currently outputs coordinates of the point cloud (challenge evaluates Chamfer distance between reference and extracted point cloud).
 
-To visualize a mesh instead, the Veko package could be used to extract an isosurface out of the probablistic output $y$.
-
+To visualize a mesh instead, the Veko package could be used to extract an isosurface out of the probablistic output $y$, as demonstrated in the code snippet in the [report](log/Report.pdf) 
 
 
 ***
