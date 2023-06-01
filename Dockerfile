@@ -12,6 +12,7 @@ COPY ./req_slim.txt /req_slim.txt
 COPY ./req.txt /req.txt
 COPY ./source /source
 COPY ./models /models
+COPY ./samples /samples
 
 
 RUN pip3 install --no-cache-dir -r /req_slim.txt
