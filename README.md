@@ -8,7 +8,7 @@ git clone https://github.com/lisatwyw/smrvis.git
 cd smrvis
 ```
 
-2. Build (includes pip installations)
+2. Build 
 ```
 docker build --tag docker-test -f Dockerfile .
 ```
