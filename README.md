@@ -33,9 +33,9 @@ Arguments to test.py:
 4) ```16```:
    - Model will cast predictions on 16 slices at a time (use higher/lower number if more/limited RAM is available)
 
-The script currently outputs coordinates of the point cloud.
+The script currently outputs coordinates of the point cloud (challenge evaluates Chamfer distance between reference and extracted point cloud).
 
-To obtain a mesh, Veko package could be used to extract an isosurface out of the probablistic output $y$
+To visualize a mesh instead, the Veko package could be used to extract an isosurface out of the probablistic output $y$.
 
 
 
