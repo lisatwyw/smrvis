@@ -61,7 +61,7 @@ Above was last tested in [Docker classroom](https://training.play-with-docker.co
 
 ***
 
-[Example outputs](logs)
+[Example outputs](log)
 
 
 
