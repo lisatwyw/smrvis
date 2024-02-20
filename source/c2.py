@@ -5,23 +5,18 @@ exec( open('c1load.py').read() )
 NZ=3 # number of depth dimensions
 
 
-
+from scipy.spatial.distance import directed_hausdorff
 import tensorflow as tf
 from tensorflow.keras import backend as K
+
+
+
 def dice_coef(y_true, y_pred, epsilon=1e-6):
     intersection = K.sum(K.abs(y_true * y_pred), axis=-1)
     return (2. * intersection) / (K.sum(K.square(y_true),axis=-1) + K.sum(K.square(y_pred),axis=-1) + epsilon)
+    
 def dice_coef_loss(y_true, y_pred):
     return 1-dice_coef(y_true, y_pred)
-
-
-
-from scipy.spatial.distance import directed_hausdorff
-
-#import tensorflow_graphics as tfg
-#import tensorflow_addons as tfa
-
-
 
 class CustomCallback( tf.keras.callbacks.Callback ):
     def __init__(self, ohe, SR, patience=0):
@@ -60,9 +55,6 @@ def pcl_distance_v0(symmetric=False):
                 '''
                 d, iu, iv = directed_hausdorff(u, v)
                 print('DD=',d, iu, iv, end=',')
-
-        #l = np.sum( np.sqrt( (px-gx)**2+(py-gy)**2+(pz-gz)**2 ), 0 )
-        #    return np.mean(d)
         return d
     return loss
 
@@ -113,9 +105,6 @@ def cdist(A, B):
     D = tf.sqrt(tf.maximum(na - 2 * tf.matmul(A, B, False, True) + nb, 0.0))
     return D
 
-
-
-
 def weighted_hausdorff_distance(w, h, alpha=.5):
     all_img_locations = tf.convert_to_tensor(cartesian([np.arange(w), np.arange(h)]), dtype=tf.float32)
     max_dist = math.sqrt(w ** 2 + h ** 2)
@@ -138,7 +127,7 @@ def weighted_hausdorff_distance(w, h, alpha=.5):
             term_2 = K.mean(d_div_p, axis=0)
 
             return term_1 + term_2
-
+            
         batched_losses = tf.map_fn(lambda x:
                                    loss(x[0], x[1]),
                                    (y_true, y_pred),
@@ -148,7 +137,6 @@ def weighted_hausdorff_distance(w, h, alpha=.5):
     return hausdorff_loss
 
 
-#import keras
 class DirectedHD( tf.keras.losses.Loss ):
     def __init__(self, symmetric=False, name="DirectedHD"):
         super().__init__(name=name)
@@ -187,17 +175,7 @@ class DirectedHD( tf.keras.losses.Loss ):
         return tf.Variable(l)/(bs+1e-7)
 
 
-# print( loss( np.expand_dims( masks[1][500:503,],0) ,  np.expand_dims( masks[1][500:503,] ,0) ) )
-
-
-
 def random_xforms( inp, out, RT=1 ):
-
-    #deg = np.random.random(1)*RT
-    #deg = np.asarray( deg//1, dtype = np.int16 )
-    #skimage.transform.rotate( inp[d,:,:] , deg )
-    #print('r[',r[0], end='] ')
-
     if RT>0:
         r=np.random.permutation(4)
         if r[0] == 0:
@@ -216,19 +194,17 @@ def random_xforms( inp, out, RT=1 ):
                 out[d,:,:]=np.flipud( out[d,:,:] )
     return inp, out
 
-
 def batch_generator( trn_ids, BS=64, show_now=0, IR=4, EN=1 ):
     while True:
         rr =np.random.permutation( np.arange(len(trn_ids)) )
         id_trn = trn_ids[rr[0]]
 
-        print('#', id_trn, end=', ')
+        
         inp = vols_trn[id_trn][:,::IR,::IR]
         out = masks[id_trn][:,::IR,::IR]
 
         nz, nx, ny = inp.shape
-
-        # print( nz, nx, ny , '???')
+        
         if SE==1:
             # pick samples based on US images
             roi = np.where( np.sum( np.sum(inp>0,2),1 ) > 0 )[0]
@@ -290,8 +266,6 @@ tst_gen= batch_generator( [id_tst], BS=BS, show_now=0, IR=IR )
 xx[2],yy[2] = trn_gen.__next__()
 
 
-
-
 if AR=='r2unet':
     KS=-1
     # NF, NR, NC
@@ -351,13 +325,10 @@ else:
     wts= [1]
     loss_fn=DirectedHD(True)
 
-
-
 for MODE in tasks:
     if MODE ==0:
         model.compile(run_eagerly=True, loss=loss_fn, loss_weights=wts, optimizer=optim, \
                       metrics=[ DirectedHD(False) ] )
-
 
 
 
@@ -396,7 +367,6 @@ for MODE in tasks:
 
 
     elif MODE== 1:
-
         print( model.summary())
 
         #try:
@@ -464,19 +434,6 @@ def compare( IT , q=.5):
         print(d)
     return px,py,pz,vx,vy,vz,d
 
-    # 1174.5
-    #
-    #
-
-    # 361,265 # px,py,pz
-    # 388,936 # pz,px,py
-    # 390,886 # pz,py,px
-    # 392327.7072515984
-    #
-    #
-    # 20,595.347610034114 <- tst
-    # 24,556.354334423788 <- trn
-
 if MODE>0:
     try:
         px0,py0,pz0,vx0,vy0,vz0, d1 = compare( trn_ids[0], .65 )
@@ -499,27 +456,26 @@ if MODE>0:
 # AR='r2unet';  LS='mae'; BS=16; tk=1; exec( open('c2tf.py', encoding='UTF-8').read() )
 
 # initially, distances are 1120
-if 1:
-    for se in [2]:#range(3):
-        print( 'casting predictions...')
-        yp=model.predict(xx[se])
-        print('predictions made.')
-        for s in range( BS ):
-            print( end='.' ,flush=True)
-            plt.close('all')
-            fig,ax = plt.subplots(3,3,figsize=(12,9))
-            for a in range(3):
-                aax=ax[0,a].imshow( yp[s,:,:,a] );  fig.colorbar(aax, ax=ax[0,a]) # ax[0,a].set_title( 'Prb channel#%d' %a );
-                th=np.quantile( yp[s,:,:,a],.45)
-                # sig = estimate_sigma( yp[s,:,:, a] )
-                # yyp = denoise_tv_chambolle( yp[s, :,:,a], weight=.1 )
-                aax=ax[1,a].imshow( yp[s,:,:,a]> th ); ax[1,a].set_title( 'Thresholded ' ); fig.colorbar(aax, ax=ax[1, a])
-                aax=ax[2,a].imshow( yy[se][s,:,:,a].astype(np.uint8) ); ax[2,a].set_title( 'Groundtruth' );  fig.colorbar(aax, ax=ax[2,a])
-            plt.tight_layout()
-            ax[2,1].set_xlabel ( 'Result of %s when Val/Tst=%d/%d'%(tids[se], IV,IT) )
-            plt.suptitle(os.path.basename( prefix) )
-            plt.savefig( '%s/yp%d_%d_mode%d.png'%( prefix, se, s, MODE ) )
-            print(end='>',flush=True)
+for se in [2]:#range(3):
+    print( 'casting predictions...')
+    yp=model.predict(xx[se])
+    print('predictions made.')
+    for s in range( BS ):
+        print( end='.' ,flush=True)
+        plt.close('all')
+        fig,ax = plt.subplots(3,3,figsize=(12,9))
+        for a in range(3):
+            aax=ax[0,a].imshow( yp[s,:,:,a] );  fig.colorbar(aax, ax=ax[0,a]) # ax[0,a].set_title( 'Prb channel#%d' %a );
+            th=np.quantile( yp[s,:,:,a],.45)
+            # sig = estimate_sigma( yp[s,:,:, a] )
+            # yyp = denoise_tv_chambolle( yp[s, :,:,a], weight=.1 )
+            aax=ax[1,a].imshow( yp[s,:,:,a]> th ); ax[1,a].set_title( 'Thresholded ' ); fig.colorbar(aax, ax=ax[1, a])
+            aax=ax[2,a].imshow( yy[se][s,:,:,a].astype(np.uint8) ); ax[2,a].set_title( 'Groundtruth' );  fig.colorbar(aax, ax=ax[2,a])
+        plt.tight_layout()
+        ax[2,1].set_xlabel ( 'Result of %s when Val/Tst=%d/%d'%(tids[se], IV,IT) )
+        plt.suptitle(os.path.basename( prefix) )
+        plt.savefig( '%s/yp%d_%d_mode%d.png'%( prefix, se, s, MODE ) )
+        print(end='>',flush=True)
 
 
 
