@@ -66,3 +66,16 @@ Above was last tested in [Docker classroom](https://training.play-with-docker.co
 
 
 
+# Citation
+
+Please consider citing this work:
+
+```
+@article{tang2023smrvis,
+  title={SMRVIS: Point cloud extraction from 3-D ultrasound for non-destructive testing},
+  author={Tang, Lisa YW},
+  journal={arXiv preprint arXiv:2306.04668},
+  year={2023}
+}
+```
+
