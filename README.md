@@ -1,6 +1,6 @@
 # Ultrasound to point cloud (of pipes)
 
-**[Site under construction; inquires welcomed]**
+**[Site under construction; inquiries welcomed]**
 
 1. Clone
 ```
